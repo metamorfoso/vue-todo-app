@@ -2,6 +2,7 @@
   import { ref } from 'vue'
   import type { Todo } from '../types'
   import AddNewTodo from './AddNewTodo.vue';
+  import TodoItem from './TodoItem.vue';
 
   const props = defineProps<{
     initialTodos?: Todo[]
@@ -24,8 +25,7 @@
 
   <ul>
     <li v-for="todo in todos">
-      {{todo.text}}
-      <button @click="removeTodo(todo.id)">Remove</button>
+      <TodoItem :todo="todo" @remove-todo="removeTodo" />
     </li>
   </ul>
 </template>
