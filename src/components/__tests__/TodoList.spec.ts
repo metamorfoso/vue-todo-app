@@ -52,4 +52,54 @@ describe('TodoList', () => {
 
     expect(wrapper.text()).not.toContain(existingTodoText)
   })
+
+  it('allows user to mark a remaining todo item as done', async () => {
+    const existingTodo = {
+      id: 1,
+      text: 'my todo item',
+      isDone: false,
+    }
+
+    const wrapper = mount(TodoList, { props: {
+      initialTodos: [existingTodo]
+    }})
+
+    const remainingList = wrapper.find('ul#remaining-list')
+    const doneList = wrapper.find('ul#done-list')
+
+    const checkboxLabelEl = withNameFilter(wrapper.findAll('label')).hasText(existingTodo.text).at(0)
+
+    expect(remainingList.text()).toContain(existingTodo.text)
+    expect(doneList.text()).not.toContain(existingTodo.text)
+
+    await checkboxLabelEl?.trigger('click')
+
+    expect(remainingList.text()).not.toContain(existingTodo.text)
+    expect(doneList.text()).toContain(existingTodo.text)
+  })
+
+  it('allows user to mark a done todo item as remaining', async () => {
+    const existingTodo = {
+      id: 1,
+      text: 'my todo item',
+      isDone: true,
+    }
+
+    const wrapper = mount(TodoList, { props: {
+      initialTodos: [existingTodo]
+    }})
+
+    const remainingList = wrapper.find('ul#remaining-list')
+    const doneList = wrapper.find('ul#done-list')
+
+    const checkboxLabelEl = withNameFilter(wrapper.findAll('label')).hasText(existingTodo.text).at(0)
+
+    expect(remainingList.text()).not.toContain(existingTodo.text)
+    expect(doneList.text()).toContain(existingTodo.text)
+
+    await checkboxLabelEl?.trigger('click')
+
+    expect(remainingList.text()).toContain(existingTodo.text)
+    expect(doneList.text()).not.toContain(existingTodo.text)
+  })
 })
